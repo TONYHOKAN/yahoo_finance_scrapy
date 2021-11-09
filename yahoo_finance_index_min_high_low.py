@@ -95,8 +95,10 @@ for row_index, row_data_array in stock_list_df.iterrows():
     stock_find_or_not = False
     try:
         time.sleep(sleep_time) # avoid heavily call
-        response_json = requests.get(url).json()
-        # log_date(response_json)
+        log_date("start call " + url)
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36"}
+        response_json = requests.get(url, headers=headers).json()
+    
         if response_json["chart"]["result"] is None:
             log_date(f"No ticket for {stockId}. " + str(response_json))
         elif response_json["chart"]["result"][0].get("timestamp") is None:
@@ -154,6 +156,7 @@ for row_index, row_data_array in stock_list_df.iterrows():
                     stock_find_or_not = True
                 break
     except Exception as e:
+        log_date("some thing wrong!!")
         log_error(e)
     if stock_find_or_not is False:
         log_date("fill empty header")
